@@ -40,7 +40,7 @@ if st.button('Predice el Precio'):
         ppi = ((X_resolution**2)+(Y_resolution**2))**0.5/(screen_size)
 
         # Preparar entrada
-        query = np.array([company, type, ram, weight, touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os]).reshape(1, -1)
+        query = np.array([company, type, ram,os, weight, touchscreen, ips, ppi, cpu, hdd, ssd, gpu]).reshape(1, -1)
         st.write("Query a predecir:", query)  # Verifica la entrada
 
         # Realizar predicción
