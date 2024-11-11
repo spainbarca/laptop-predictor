@@ -5,7 +5,7 @@ import pickle
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import FunctionTransformer
 
-file1 = open('laptoppricepredictor.pkl', 'rb')
+file1 = open('pipe.pkl', 'rb')
 rf = pickle.load(file1)
 file1.close()
 
