@@ -106,4 +106,4 @@ if st.button('Predecir'):
     prediction = int(np.exp(rf.predict(expanded_query)[0]))
 
     st.title("El precio predecido de esta laptop puede ser entre " +
-             "S/." + str(prediction - 1000) + " y " + "S/." + str(prediction + 1000))
+             "S/." + str(prediction - 40) + " y " + "S/." + str(prediction + 40))
