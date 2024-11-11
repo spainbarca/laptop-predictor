@@ -57,10 +57,8 @@ if st.button('Predecir'):
     query = np.array([company, type, ram, float(weight),
                       touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
-    # Verificar valores NaN en 'query'
-    if np.isnan(query).any():
-        st.error("Error: Hay valores faltantes en los datos de entrada.")
-        st.stop()
+    # Llenar valores NaN en 'query' con 0
+    np.nan_to_num(query, copy=False)
 
     # Asegurar que query tenga la forma correcta para el modelo
     query = query.reshape(1, -1)
