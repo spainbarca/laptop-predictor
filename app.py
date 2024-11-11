@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import FunctionTransformer
 
 # Cargar el modelo y pipeline desde archivo
 file1 = open('pipe.pkl', 'rb')
@@ -42,21 +44,24 @@ if st.button('Predecir'):
 
     # Codificar las variables categóricas utilizando índices del dataset
     try:
-        company = data['Company'].unique().tolist().index(company)
-        type = data['TypeName'].unique().tolist().index(type)
-        cpu = data['CPU_name'].unique().tolist().index(cpu)
-        gpu = data['Gpu brand'].unique().tolist().index(gpu)
-        os = data['OpSys'].unique().tolist().index(os)
+        company = float(data['Company'].unique().tolist().index(company))
+        type = float(data['TypeName'].unique().tolist().index(type))
+        cpu = float(data['CPU_name'].unique().tolist().index(cpu))
+        gpu = float(data['Gpu brand'].unique().tolist().index(gpu))
+        os = float(data['OpSys'].unique().tolist().index(os))
     except ValueError:
         st.error("Error: Una de las categorías seleccionadas no es válida para el modelo entrenado.")
         st.stop()
 
-    # Crear array con los datos de entrada
+    # Crear array con los datos de entrada y asegurarse de que sean flotantes
     query = np.array([company, type, ram, float(weight),
                       touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
+    # Llenar valores NaN en 'query' con 0
+    np.nan_to_num(query, copy=False)
+
     # Asegurar que query tenga la forma correcta para el modelo
-    query = query.reshape(1, 12)
+    query = query.reshape(1, -1)
 
     # Validar el número de características esperadas por el modelo
     expected_features = rf.n_features_in_
