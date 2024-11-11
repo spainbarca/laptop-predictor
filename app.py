@@ -9,8 +9,7 @@ file1 = open('pipe.pkl', 'rb')
 rf = pickle.load(file1)
 file1.close()
 
-# Apple,Ultrabook,8,Mac,1.37,0,1,226.98300468106115,Intel Core i5,0,128,Intel
-
+# Cargamos los datos
 data = pd.read_csv("traineddata.csv")
 
 data['IPS'].unique()
@@ -82,6 +81,11 @@ if st.button('Predecir'):
     # Creamos el array con los datos de entrada y convertimos a float
     query = np.array([company, type, ram, float(weight),
                       touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
+
+    # Verificar si hay valores NaN en 'query'
+    if np.isnan(query).any():
+        st.error("Error: Hay valores faltantes en los datos de entrada. Por favor, verifica todas las entradas.")
+        st.stop()
 
     # Aseguramos que query tenga la forma (1, n)
     query = query.reshape(1, -1)
