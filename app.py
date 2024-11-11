@@ -66,8 +66,7 @@ ssd = st.selectbox('SSD(en GB)', [0, 8, 128, 256, 512, 1024])
 
 gpu = st.selectbox('GPU(en GB)', data['Gpu brand'].unique())
 
-if st.button('Predice el Precio'):
-    ppi = None
+if st.button('Predecir'):
     # Convertimos touchscreen y ips a 1 o 0 según la selección
     touchscreen = 1 if touchscreen == 'Si' else 0
     ips = 1 if ips == 'Si' else 0
@@ -77,9 +76,18 @@ if st.button('Predice el Precio'):
     Y_resolution = int(resolution.split('x')[1])
     ppi = ((X_resolution ** 2) + (Y_resolution ** 2)) ** 0.5 / screen_size
 
+    # Codificamos las variables categóricas
+    # Suponiendo que el modelo rf ya fue entrenado con variables codificadas
+    # Si las variables no están codificadas, debes codificarlas antes de entrenar el modelo
+    company = data['Company'].unique().tolist().index(company)
+    type = data['TypeName'].unique().tolist().index(type)
+    cpu = data['CPU_name'].unique().tolist().index(cpu)
+    gpu = data['Gpu brand'].unique().tolist().index(gpu)
+    os = data['OpSys'].unique().tolist().index(os)
+
     # Creamos el array con los datos de entrada y convertimos a float
     query = np.array([company, type, ram, float(weight),
-                      touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=object)
+                      touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
     # Redimensionamos el array a 1x12 para la predicción
     query = query.reshape(1, -1)
