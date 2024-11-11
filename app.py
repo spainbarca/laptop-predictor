@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import FunctionTransformer
 
 # Cargar el modelo y pipeline desde archivo
 file1 = open('pipe.pkl', 'rb')
@@ -11,7 +9,7 @@ rf = pickle.load(file1)
 file1.close()
 
 # Cargar los datos de entrenamiento como referencia para categorías
-data = pd.read_csv("laptop_data.csv")
+data = pd.read_csv("traineddata.csv")
 
 st.title("Predictor de Precios de Laptops")
 
