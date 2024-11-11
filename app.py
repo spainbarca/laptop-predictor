@@ -77,8 +77,6 @@ if st.button('Predecir'):
     ppi = ((X_resolution ** 2) + (Y_resolution ** 2)) ** 0.5 / screen_size
 
     # Codificamos las variables categóricas
-    # Suponiendo que el modelo rf ya fue entrenado con variables codificadas
-    # Si las variables no están codificadas, debes codificarlas antes de entrenar el modelo
     company = data['Company'].unique().tolist().index(company)
     type = data['TypeName'].unique().tolist().index(type)
     cpu = data['CPU_name'].unique().tolist().index(cpu)
@@ -89,11 +87,16 @@ if st.button('Predecir'):
     query = np.array([company, type, ram, float(weight),
                       touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
-    # Redimensionamos el array a 1x12 para la predicción
-    query = query.reshape(1, -1)
+    # Verificar el tamaño de las características en el modelo
+    expected_features = rf.n_features_in_  # Número de características que espera el modelo
+    if query.shape[1] != expected_features:
+        st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
+    else:
+        # Redimensionamos el array a 1x12 para la predicción
+        query = query.reshape(1, -1)
 
-    # Realizamos la predicción y calculamos el precio final
-    prediction = int(np.exp(rf.predict(query)[0]))
+        # Realizamos la predicción y calculamos el precio final
+        prediction = int(np.exp(rf.predict(query)[0]))
 
-    st.title("El precio predecido de esta laptop puede ser entre " +
-             "S/." + str(prediction - 1000) + " y " + "S/." + str(prediction + 1000))
+        st.title("El precio predecido de esta laptop puede ser entre " +
+                 "S/." + str(prediction - 1000) + " y " + "S/." + str(prediction + 1000))
