@@ -17,55 +17,45 @@ data['IPS'].unique()
 
 st.title("Predictor de Precios de Laptops")
 
+# Selección de marca
 company = st.selectbox('Marca', data['Company'].unique())
 
-
-
-# type of laptop
-
+# Selección de tipo de laptop
 type = st.selectbox('Tipo', data['TypeName'].unique())
 
-# Ram present in laptop
-
+# Selección de RAM
 ram = st.selectbox('Memoria RAM(en GB)', [2, 4, 6, 8, 12, 16, 24, 32, 64])
 
-# os of laptop
-
+# Selección de sistema operativo
 os = st.selectbox('Sistema Operativo', data['OpSys'].unique())
 
-# weight of laptop
-
+# Entrada de peso
 weight = st.number_input('Peso de la Laptop')
 
-# touchscreen available in laptop or not
-
+# Pantalla táctil
 touchscreen = st.selectbox('¿Es pantalla tactil?', ['No', 'Si'])
 
-# IPS
-
+# Pantalla IPS
 ips = st.selectbox('¿Es pantalla plana?', ['No', 'Si'])
 
-# screen size
-
+# Tamaño de pantalla
 screen_size = st.number_input('Screen Size')
 
-# resolution of laptop
-
+# Resolución de pantalla
 resolution = st.selectbox('Resolución de Pantalla', [
-                          '1920x1080', '1366x768', '1600x900', '3840x2160', '3200x1800', '2880x1800', '2560x1600', '2560x1440', '2304x1440'])
+    '1920x1080', '1366x768', '1600x900', '3840x2160', '3200x1800', 
+    '2880x1800', '2560x1600', '2560x1440', '2304x1440'])
 
-# cpu
-
+# Selección de CPU
 cpu = st.selectbox('CPU', data['CPU_name'].unique())
 
-# hdd
-
+# Selección de HDD
 hdd = st.selectbox('HDD(en GB)', [0, 128, 256, 512, 1024, 2048])
 
-# ssd
-
+# Selección de SSD
 ssd = st.selectbox('SSD(en GB)', [0, 8, 128, 256, 512, 1024])
 
+# Selección de GPU
 gpu = st.selectbox('GPU(en GB)', data['Gpu brand'].unique())
 
 if st.button('Predecir'):
@@ -86,24 +76,24 @@ if st.button('Predecir'):
     os = data['OpSys'].unique().tolist().index(os)
 
     # Creamos el array con los datos de entrada y convertimos a float
-	query = np.array([company, type, ram, float(weight),
-					  touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
+    query = np.array([company, type, ram, float(weight),
+                      touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
-	# Aseguramos que query tenga la forma (1, n)
-	query = query.reshape(1, -1)
+    # Aseguramos que query tenga la forma (1, n)
+    query = query.reshape(1, -1)
 
-	# Agregamos las líneas de depuración para verificar el tamaño de 'query' y las características esperadas por el modelo
-	st.write("Query shape:", query.shape)
-	st.write("Model expected features:", expected_features)
+    # Verificamos el número de características esperadas por el modelo
+    expected_features = rf.n_features_in_
 
-	# Verificar el tamaño de las características en el modelo
-	expected_features = rf.n_features_in_  # Número de características que espera el modelo
-	if query.shape[1] != expected_features:
-		st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
-	else:
-		# Realizamos la predicción y calculamos el precio final
-		prediction = int(np.exp(rf.predict(query)[0]))
+    # Agregamos las líneas de depuración
+    st.write("Query shape:", query.shape)
+    st.write("Model expected features:", expected_features)
 
-		st.title("El precio predecido de esta laptop puede ser entre " +
-				 "S/." + str(prediction - 50) + " y " + "S/." + str(prediction + 50))
+    if query.shape[1] != expected_features:
+        st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
+    else:
+        # Realizamos la predicción y calculamos el precio final
+        prediction = int(np.exp(rf.predict(query)[0]))
 
+        st.title("El precio predecido de esta laptop puede ser entre " +
+                 "S/." + str(prediction - 50) + " y " + "S/." + str(prediction + 50))
