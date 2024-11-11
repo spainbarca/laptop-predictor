@@ -11,7 +11,7 @@ rf = pickle.load(file1)
 file1.close()
 
 # Cargar los datos de entrenamiento como referencia para categorías
-data = pd.read_csv("traineddata.csv")
+data = pd.read_csv("laptop_data.csv")
 
 st.title("Predictor de Precios de Laptops")
 
