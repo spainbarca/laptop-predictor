@@ -68,7 +68,7 @@ ssd = st.selectbox('SSD(en GB)', [0, 8, 128, 256, 512, 1024])
 
 gpu = st.selectbox('GPU(en GB)', data['Gpu brand'].unique())
 
-if st.button('Predice el Precio'):
+if st.button('Predecir'):
     # Convertimos touchscreen y ips a 1 o 0 según la selección
     touchscreen = 1 if touchscreen == 'Si' else 0
     ips = 1 if ips == 'Si' else 0
@@ -101,4 +101,4 @@ if st.button('Predice el Precio'):
         prediction = int(np.exp(rf.predict(query)[0]))
 
         st.title("El precio predecido de esta laptop puede ser entre " +
-                 "S/." + str(prediction - 1000) + " y " + "S/." + str(prediction + 1000))
+                 "S/." + str(prediction - 50) + " y " + "S/." + str(prediction + 50))
