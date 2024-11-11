@@ -87,14 +87,15 @@ if st.button('Predecir'):
     query = np.array([company, type, ram, float(weight),
                       touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
+    # Aseguramos que query tenga la forma (1, n)
+    if query.ndim == 1:
+        query = query.reshape(1, -1)
+
     # Verificar el tamaño de las características en el modelo
     expected_features = rf.n_features_in_  # Número de características que espera el modelo
     if query.shape[1] != expected_features:
         st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
     else:
-        # Redimensionamos el array a 1x12 para la predicción
-        query = query.reshape(1, -1)
-
         # Realizamos la predicción y calculamos el precio final
         prediction = int(np.exp(rf.predict(query)[0]))
 
