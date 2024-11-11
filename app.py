@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pickle
 
-file1 = open('pipe.pkl', 'rb')
+file1 = open('laptoppricepredictor.pkl', 'rb')
 rf = pickle.load(file1)
 file1.close()
 
@@ -15,7 +15,7 @@ data['IPS'].unique()
 
 st.title("Predictor de Precios de Laptops")
 
-company = st.selectbox('Brand', data['Company'].unique())
+company = st.selectbox('Marca', data['Company'].unique())
 
 
 
@@ -92,4 +92,4 @@ if st.button('Predice el Precio'):
     prediction = int(np.exp(rf.predict(query)[0]))
 
     st.title("El precio predecido de esta laptop puede ser entre " +
-             "S/."+str(prediction-1000)+ " y " + "S/."+ str(prediction+1000))
+             "S/." +str(prediction-1000)+ " y " + "S/."+ str(prediction+1000))
