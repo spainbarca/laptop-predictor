@@ -93,20 +93,16 @@ if st.button('Predecir'):
     if query.ndim == 1:
         query = query.reshape(1, -1)
 
-  # Expansión de `query` para adaptarse a las 38 características del modelo
+    # Expandimos `query` para que tenga 38 características llenando con ceros
     def expand_features(input_array):
         expanded_array = np.zeros((1, 38))
-        
-        # Define los índices en el modelo donde deben ir estos 12 valores
-        selected_columns_indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]  # Ejemplo de índices
-        expanded_array[0, selected_columns_indices] = input_array  # Asigna los valores en los índices correctos
-        
+        expanded_array[0, :12] = input_array  # Coloca los primeros 12 valores en la posición correspondiente
         return expanded_array
 
-    # Expandimos `query` a 38 características
+    # Transformamos `query` para que tenga 38 columnas
     expanded_query = expand_features(query)
 
-    # Realizamos la predicción y calculamos el precio final
+    # Realizamos la predicción y calculamos el precio final usando `expanded_query`
     prediction = int(np.exp(rf.predict(expanded_query)[0]))
 
     st.title("El precio predecido de esta laptop puede ser entre " +
