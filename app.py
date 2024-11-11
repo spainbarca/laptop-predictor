@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import FunctionTransformer
 
 file1 = open('laptoppricepredictor.pkl', 'rb')
 rf = pickle.load(file1)
@@ -91,13 +93,17 @@ if st.button('Predecir'):
     if query.ndim == 1:
         query = query.reshape(1, -1)
 
-    # Verificar el tamaño de las características en el modelo
-    expected_features = rf.n_features_in_  # Número de características que espera el modelo
-    if query.shape[1] != expected_features:
-        st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
-    else:
-        # Realizamos la predicción y calculamos el precio final
-        prediction = int(np.exp(rf.predict(query)[0]))
+    # Expandimos `query` para que tenga 38 características llenando con ceros
+    def expand_features(input_array):
+        expanded_array = np.zeros((1, 38))
+        expanded_array[0, :12] = input_array  # Coloca los primeros 12 valores en la posición correspondiente
+        return expanded_array
 
-        st.title("El precio predecido de esta laptop puede ser entre " +
-                 "S/." + str(prediction - 1000) + " y " + "S/." + str(prediction + 1000))
+    # Transformamos `query` para que tenga 38 columnas
+    expanded_query = expand_features(query)
+
+    # Realizamos la predicción y calculamos el precio final usando `expanded_query`
+    prediction = int(np.exp(rf.predict(expanded_query)[0]))
+
+    st.title("El precio predecido de esta laptop puede ser entre " +
+             "S/." + str(prediction - 1000) + " y " + "S/." + str(prediction + 1000))
