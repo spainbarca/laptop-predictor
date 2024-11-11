@@ -86,19 +86,24 @@ if st.button('Predecir'):
     os = data['OpSys'].unique().tolist().index(os)
 
     # Creamos el array con los datos de entrada y convertimos a float
-    query = np.array([company, type, ram, float(weight),
-                      touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
+	query = np.array([company, type, ram, float(weight),
+					  touchscreen, ips, ppi, cpu, hdd, ssd, gpu, os], dtype=float)
 
-    # Aseguramos que query tenga la forma (1, n)
-    query = query.reshape(1, -1)
+	# Aseguramos que query tenga la forma (1, n)
+	query = query.reshape(1, -1)
 
-    # Verificar el tamaño de las características en el modelo
-    expected_features = rf.n_features_in_  # Número de características que espera el modelo
-    if query.shape[1] != expected_features:
-        st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
-    else:
-        # Realizamos la predicción y calculamos el precio final
-        prediction = int(np.exp(rf.predict(query)[0]))
+	# Agregamos las líneas de depuración para verificar el tamaño de 'query' y las características esperadas por el modelo
+	st.write("Query shape:", query.shape)
+	st.write("Model expected features:", expected_features)
 
-        st.title("El precio predecido de esta laptop puede ser entre " +
-                 "S/." + str(prediction - 50) + " y " + "S/." + str(prediction + 50))
+	# Verificar el tamaño de las características en el modelo
+	expected_features = rf.n_features_in_  # Número de características que espera el modelo
+	if query.shape[1] != expected_features:
+		st.error(f"Error: El modelo espera {expected_features} características, pero se proporcionaron {query.shape[1]}.")
+	else:
+		# Realizamos la predicción y calculamos el precio final
+		prediction = int(np.exp(rf.predict(query)[0]))
+
+		st.title("El precio predecido de esta laptop puede ser entre " +
+				 "S/." + str(prediction - 50) + " y " + "S/." + str(prediction + 50))
+
